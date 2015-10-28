@@ -2769,7 +2769,7 @@ properties:
       password: nats
       username: nats
   hm9000:
-      url: https://hm9000.10.244.0.34.xip.io
+    url: https://hm9000.10.244.0.34.xip.io
   logger_endpoint: null
   loggregator:
     blacklisted_syslog_ranges: null
