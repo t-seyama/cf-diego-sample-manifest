@@ -1703,6 +1703,7 @@ networks:
 properties:
   consul:
     agent:
+      datacenter: null
       log_level: null
       servers:
         lan:
@@ -2224,11 +2225,13 @@ properties:
         require_ssl: true
       log_level: debug
     executor:
+      disk_capacity_mb: null
       drain_timeout_in_seconds: 0
       garden:
         address: 127.0.0.1:7777
         network: tcp
       log_level: debug
+      memory_capacity_mb: null
     file_server:
       log_level: null
     nsync:
@@ -2606,9 +2609,9 @@ properties:
         client_session_cache_size: null
         max_idle_conns_per_host: null
         require_ssl: true
-      diego_credentials: ""
+      diego_credentials: null
       enable_cf_auth: true
-      enable_diego_auth: true
+      enable_diego_auth: false
       host_key: |+
         -----BEGIN RSA PRIVATE KEY-----
         MIIEhgIBAAKB/DMF5qOW+fh608KhX7qBLNHHmfzCfOONd176Oaf8rGht5KdnoNge
