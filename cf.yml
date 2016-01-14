@@ -2447,7 +2447,7 @@ properties:
     admin_user: admin
     api: api.bosh-lite.com
     apps_domain: bosh-lite.com
-    client_secret: gorouter-secret
+    client_secret: tcp-emitter-secret
     include_routing: true
     nodes: 1
     skip_ssl_validation: true
@@ -2633,6 +2633,8 @@ properties:
       rules:
       - destination: 10.244.4.0-10.254.0.0
         protocol: all
+    service_usage_events:
+      cutoff_age_in_days: 31
     srv_api_uri: https://api.bosh-lite.com
     stacks: null
     staging_upload_password: upload-password
@@ -2826,6 +2828,7 @@ properties:
       BKcJHlf9kYxFaLL17iOq9rY0+LURr63BkRa2uyn489luxcHnTjk=
       -----END RSA PRIVATE KEY-----
   databases:
+    additional_config: null
     address: 10.244.0.30
     collect_statement_statistics: true
     databases:
@@ -2881,6 +2884,7 @@ properties:
       key: null
       port: null
     unmarshaller_count: 5
+    zone: null
   doppler_endpoint:
     shared_secret: loggregator-secret
   dropsonde:
@@ -2943,7 +2947,9 @@ properties:
     uaa_base: null
     url: null
   metron_agent:
+    buffer_size: null
     deployment: cf-warden
+    enable_buffer: null
     preferred_protocol: null
     tls_client:
       cert: null
@@ -2951,7 +2957,6 @@ properties:
   metron_endpoint:
     shared_secret: loggregator-secret
   nats:
-    address: 10.244.0.6
     debug: false
     machines:
     - 10.244.0.6
@@ -2971,14 +2976,15 @@ properties:
   router:
     cipher_suites: null
     debug_addr: null
+    enable_routing_api: true
     enable_ssl: null
     extra_headers_to_log: null
     logrotate: null
     port: null
     requested_route_registration_interval_in_seconds: null
-    route_service_timeout: null
     route_services_secret: route-services-secret
     route_services_secret_decrypt_only: null
+    route_services_timeout: null
     secure_cookies: null
     ssl_cert: null
     ssl_key: null
@@ -3004,6 +3010,7 @@ properties:
   system_domain_organization: null
   traffic_controller:
     outgoing_port: 8080
+    zone: null
   uaa:
     admin:
       client_secret: admin-secret
@@ -3025,6 +3032,14 @@ properties:
         authorities: routing.router_groups.read
         authorized-grant-types: client_credentials
         secret: cc-routing-secret
+      cf:
+        access-token-validity: 600
+        authorities: uaa.none
+        authorized-grant-types: implicit,password,refresh_token
+        id: cf
+        override: true
+        refresh-token-validity: 2592000
+        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read
       cloud_controller_username_lookup:
         authorities: scim.userids
         authorized-grant-types: client_credentials
@@ -3034,9 +3049,8 @@ properties:
         override: true
         secret: doppler-secret
       gorouter:
-        authorities: clients.read,clients.write,clients.admin,routing.routes.write,routing.routes.read
+        authorities: routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
-        scope: openid,cloud_controller_service_permissions.read
         secret: gorouter-secret
       login:
         authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
@@ -3056,6 +3070,14 @@ properties:
         redirect-uri: /login
         scope: openid,cloud_controller.read,cloud_controller.write
         secret: ssh-proxy-secret
+      tcp_emitter:
+        authorities: routing.routes.write,routing.routes.read
+        authorized-grant-types: client_credentials,refresh_token
+        secret: tcp-emitter-secret
+      tcp_router:
+        authorities: routing.routes.read
+        authorized-grant-types: client_credentials,refresh_token
+        secret: tcp-router-secret
     database: null
     issuer: https://uaa.bosh-lite.com
     jwt:
@@ -3087,7 +3109,7 @@ properties:
     newrelic: null
     no_ssl: null
     port: 8080
-    require_https: null
+    require_https: false
     restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
     scim:
       external_groups: null
@@ -3096,9 +3118,14 @@ properties:
       users:
       - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read
     spring_profiles: null
+    ssl:
+      port: -1
     url: https://uaa.bosh-lite.com
     user: null
-    zones: null
+    zones:
+      internal:
+        hostnames:
+        - uaa.service.cf.internal
   uaadb:
     address: 10.244.0.30
     databases:

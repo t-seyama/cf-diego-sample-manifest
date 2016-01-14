@@ -4,12 +4,16 @@ compilation:
   reuse_compilation_vms: true
   workers: 6
 director_uuid: cf5f29da-51c9-433f-8c1f-9ae0536d4778
+disk_pools:
+- cloud_properties: {}
+  disk_size: 1024
+  name: database_disks
 jobs:
 - instances: 1
   name: database_z1
   networks:
   - name: diego1
-  persistent_disk: 1024
+  persistent_disk_pool: database_disks
   properties:
     consul:
       agent:
@@ -35,7 +39,7 @@ jobs:
   name: database_z2
   networks:
   - name: diego2
-  persistent_disk: 1024
+  persistent_disk_pool: database_disks
   properties:
     consul:
       agent:
@@ -61,7 +65,7 @@ jobs:
   name: database_z3
   networks:
   - name: diego3
-  persistent_disk: 1024
+  persistent_disk_pool: database_disks
   properties:
     consul:
       agent:
@@ -461,7 +465,7 @@ jobs:
   networks:
   - name: diego1
     static_ips: []
-  persistent_disk: 1024
+  persistent_disk_pool: database_disks
   properties:
     consul:
       agent:
@@ -482,6 +486,8 @@ jobs:
       zone: z1
   resource_pool: colocated_z1
   templates:
+  - name: rep
+    release: diego
   - name: auctioneer
     release: diego
   - name: bbs
@@ -502,7 +508,7 @@ jobs:
     release: cf
   - name: nsync
     release: diego
-  - name: rep
+  - name: rootfses
     release: diego
   - name: route_emitter
     release: diego
@@ -520,7 +526,7 @@ jobs:
   networks:
   - name: diego2
     static_ips: []
-  persistent_disk: 1024
+  persistent_disk_pool: database_disks
   properties:
     consul:
       agent:
@@ -541,6 +547,8 @@ jobs:
       zone: z2
   resource_pool: colocated_z2
   templates:
+  - name: rep
+    release: diego
   - name: auctioneer
     release: diego
   - name: bbs
@@ -561,7 +569,7 @@ jobs:
     release: cf
   - name: nsync
     release: diego
-  - name: rep
+  - name: rootfses
     release: diego
   - name: route_emitter
     release: diego
@@ -579,7 +587,7 @@ jobs:
   networks:
   - name: diego3
     static_ips: []
-  persistent_disk: 1024
+  persistent_disk_pool: database_disks
   properties:
     consul:
       agent:
@@ -600,6 +608,8 @@ jobs:
       zone: z3
   resource_pool: colocated_z3
   templates:
+  - name: rep
+    release: diego
   - name: auctioneer
     release: diego
   - name: bbs
@@ -620,7 +630,7 @@ jobs:
     release: cf
   - name: nsync
     release: diego
-  - name: rep
+  - name: rootfses
     release: diego
   - name: route_emitter
     release: diego
@@ -1941,6 +1951,7 @@ properties:
         max_idle_conns_per_host: null
         require_ssl: true
       cell_state_timeout: null
+      dropsonde_port: null
       log_level: null
     bbs:
       active_key_label: key1
@@ -1976,6 +1987,7 @@ properties:
         I0YSumzEeQMcFbg0LUYayZ9PlhPgLosMba9BDK/K244OZvmGyRr1ANnnASsQg4cK
         vsHDEV4jBWxHAw41ArfNLg9vA8ojf/1EU4E2d5GU5fVe
         -----END CERTIFICATE-----
+      dropsonde_port: null
       encryption_keys:
       - label: key1
         passphrase: a secure passphrase
@@ -2132,6 +2144,7 @@ properties:
         basic_auth_password: internal-password
         staging_upload_password: upload-password
         staging_upload_user: upload-user
+      dropsonde_port: null
       log_level: null
     converger:
       bbs:
@@ -2223,6 +2236,7 @@ properties:
         client_session_cache_size: null
         max_idle_conns_per_host: null
         require_ssl: true
+      dropsonde_port: null
       log_level: debug
     executor:
       disk_capacity_mb: null
@@ -2230,9 +2244,20 @@ properties:
       garden:
         address: 127.0.0.1:7777
         network: tcp
+      garden_healthcheck:
+        command_retry_pause: null
+        interval: null
+        process:
+          args: null
+          dir: null
+          env: null
+          path: null
+          user: null
+        timeout: null
       log_level: debug
       memory_capacity_mb: null
     file_server:
+      dropsonde_port: null
       log_level: null
     nsync:
       bbs:
@@ -2329,6 +2354,7 @@ properties:
         basic_auth_password: internal-password
         staging_upload_password: upload-password
         staging_upload_user: upload-user
+      dropsonde_port: null
       log_level: debug
     rep:
       bbs:
@@ -2420,6 +2446,7 @@ properties:
         client_session_cache_size: null
         max_idle_conns_per_host: null
         require_ssl: true
+      dropsonde_port: null
       evacuation_timeout_in_seconds: 60
       log_level: debug
     route_emitter:
@@ -2512,6 +2539,7 @@ properties:
         client_session_cache_size: null
         max_idle_conns_per_host: null
         require_ssl: true
+      dropsonde_port: null
       log_level: debug
       nats:
         machines:
@@ -2610,6 +2638,7 @@ properties:
         max_idle_conns_per_host: null
         require_ssl: true
       diego_credentials: null
+      dropsonde_port: null
       enable_cf_auth: true
       enable_diego_auth: false
       host_key: |+
@@ -2741,6 +2770,7 @@ properties:
         basic_auth_password: internal-password
         staging_upload_password: upload-password
         staging_upload_user: upload-user
+      dropsonde_port: null
       insecure_docker_registry_list: null
       log_level: null
     tps:
@@ -2838,6 +2868,7 @@ properties:
         basic_auth_password: internal-password
         staging_upload_password: upload-password
         staging_upload_user: upload-user
+      dropsonde_port: null
       log_level: null
       traffic_controller_url: wss://doppler.bosh-lite.com:443
   etcd:
@@ -3100,13 +3131,25 @@ properties:
     persistent_image_list:
     - /var/vcap/packages/rootfs_cflinuxfs2/rootfs
   loggregator:
+    dropsonde_incoming_port: null
     etcd:
       machines:
       - 10.244.0.42
+    tls:
+      ca: null
   loggregator_endpoint:
     shared_secret: loggregator-secret
   metron_agent:
+    buffer_size: null
     deployment: cf-warden-diego
+    dropsonde_incoming_port: null
+    enable_buffer: null
+    preferred_protocol: null
+    tls_client:
+      cert: null
+      key: null
+  metron_endpoint:
+    shared_secret: loggregator-secret
   nats:
     machines:
     - 10.244.0.6

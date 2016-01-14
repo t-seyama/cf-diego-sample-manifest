@@ -16,11 +16,8 @@ cd ${repo_base}/cf-release
 
 cd ${repo_base}/diego-release
 ./scripts/generate-deployment-manifest \
-    ${base}/director.yml \
-    ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/property-overrides.yml \
-    ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/instance-count-overrides.yml \
-    ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/persistent-disk-overrides.yml \
-    ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/iaas-settings.yml \
-    ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/additional-jobs.yml \
-    ${base} \
+    -c ${base}/cf.yml \
+    -i ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/iaas-settings.yml \
+    -p ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/property-overrides.yml \
+    -n ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/instance-count-overrides.yml \
     > ${base}/diego.yml
