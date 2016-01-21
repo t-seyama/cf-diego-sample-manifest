@@ -378,7 +378,6 @@ jobs:
       agent:
         services:
           cloud_controller_ng: {}
-          routing-api: {}
     metron_agent:
       zone: z2
     nfs_server:
@@ -398,8 +397,6 @@ jobs:
   resource_pool: large_z2
   templates:
   - name: cloud_controller_ng
-    release: cf
-  - name: routing-api
     release: cf
   - name: metron_agent
     release: cf
@@ -2865,6 +2862,7 @@ properties:
     memory_mb: 8192
     memory_overcommit_factor: null
     mtu: null
+    post_setup_hook: null
     rlimit_core: 0
     staging_bandwidth_limit: null
     staging_disk_inode_limit: 200000
@@ -2902,6 +2900,7 @@ properties:
       username: nats
   ha_proxy: null
   hm9000:
+    port: 5155
     url: https://hm9000.bosh-lite.com
   logger_endpoint: null
   loggregator:
