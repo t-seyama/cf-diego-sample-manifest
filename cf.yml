@@ -8,7 +8,6 @@ director_uuid: cf5f29da-51c9-433f-8c1f-9ae0536d4778
 jobs:
 - default_networks:
   - name: cf1
-    static_ips: null
   instances: 1
   name: consul_z1
   networks:
@@ -33,7 +32,6 @@ jobs:
     serial: true
 - default_networks:
   - name: cf2
-    static_ips: null
   instances: 0
   name: consul_z2
   networks:
@@ -57,7 +55,6 @@ jobs:
     serial: true
 - default_networks:
   - name: cf1
-    static_ips: null
   instances: 1
   name: ha_proxy_z1
   networks:
@@ -125,7 +122,9 @@ jobs:
   - name: consul_agent
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: nats_z1
   networks:
   - name: cf1
@@ -143,7 +142,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: nats_z2
   networks:
   - name: cf2
@@ -160,7 +161,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: etcd_z1
   networks:
   - name: cf1
@@ -181,7 +184,9 @@ jobs:
   update:
     max_in_flight: 1
     serial: true
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: etcd_z2
   networks:
   - name: cf2
@@ -201,7 +206,9 @@ jobs:
   update:
     max_in_flight: 1
     serial: true
-- instances: 0
+- default_networks:
+  - name: cf1
+  instances: 0
   name: stats_z1
   networks:
   - name: cf1
@@ -215,11 +222,12 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf1
+  instances: 0
   name: nfs_z1
   networks:
   - name: cf1
-    static_ips: null
   persistent_disk: 102400
   properties:
     consul:
@@ -231,7 +239,7 @@ jobs:
     route_registrar:
       routes:
       - name: blobstore
-        port: 80
+        port: 8080
         registration_interval: 20s
         tags:
           component: blobstore
@@ -250,11 +258,12 @@ jobs:
   - name: route_registrar
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: blobstore_z1
   networks:
   - name: cf1
-    static_ips: null
   persistent_disk: 102400
   properties:
     consul:
@@ -266,7 +275,7 @@ jobs:
     route_registrar:
       routes:
       - name: blobstore
-        port: 80
+        port: 8080
         registration_interval: 20s
         tags:
           component: blobstore
@@ -283,7 +292,9 @@ jobs:
   - name: route_registrar
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: postgres_z1
   networks:
   - name: cf1
@@ -300,7 +311,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: uaa_z1
   networks:
   - name: cf1
@@ -343,7 +356,9 @@ jobs:
   - name: statsd-injector
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: uaa_z2
   networks:
   - name: cf2
@@ -386,7 +401,9 @@ jobs:
   - name: statsd-injector
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: api_z1
   networks:
   - name: cf1
@@ -448,7 +465,9 @@ jobs:
   - name: route_registrar
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: api_z2
   networks:
   - name: cf2
@@ -506,7 +525,9 @@ jobs:
   - name: route_registrar
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf1
+  instances: 0
   name: clock_global
   networks:
   - name: cf1
@@ -521,7 +542,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf1
+  instances: 0
   name: api_worker_z1
   networks:
   - name: cf1
@@ -544,7 +567,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: api_worker_z2
   networks:
   - name: cf2
@@ -567,7 +592,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: hm9000_z1
   networks:
   - name: cf1
@@ -598,7 +625,9 @@ jobs:
   - name: route_registrar
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: hm9000_z2
   networks:
   - name: cf2
@@ -629,7 +658,9 @@ jobs:
   - name: route_registrar
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: runner_z1
   networks:
   - name: cf1
@@ -661,11 +692,12 @@ jobs:
     release: cf
   update:
     max_in_flight: 1
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: runner_z2
   networks:
   - name: cf2
-    static_ips: null
   properties:
     consul:
       agent:
@@ -692,7 +724,9 @@ jobs:
     release: cf
   update:
     max_in_flight: 1
-- instances: 0
+- default_networks:
+  - name: cf1
+  instances: 0
   name: loggregator_z1
   networks:
   - name: cf1
@@ -710,7 +744,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: loggregator_z2
   networks:
   - name: cf2
@@ -728,7 +764,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: doppler_z1
   networks:
   - name: cf1
@@ -746,7 +784,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: doppler_z2
   networks:
   - name: cf2
@@ -764,7 +804,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   name: loggregator_trafficcontroller_z1
   networks:
   - name: cf1
@@ -794,7 +836,9 @@ jobs:
   - name: route_registrar
     release: cf
   update: {}
-- instances: 0
+- default_networks:
+  - name: cf2
+  instances: 0
   name: loggregator_trafficcontroller_z2
   networks:
   - name: cf2
@@ -826,7 +870,6 @@ jobs:
   update: {}
 - default_networks:
   - name: cf1
-    static_ips: null
   instances: 1
   name: router_z1
   networks:
@@ -851,7 +894,6 @@ jobs:
   update: {}
 - default_networks:
   - name: cf2
-    static_ips: null
   instances: 0
   name: router_z2
   networks:
@@ -873,7 +915,9 @@ jobs:
   - name: metron_agent
     release: cf
   update: {}
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   lifecycle: errand
   name: acceptance_tests
   networks:
@@ -882,7 +926,9 @@ jobs:
   templates:
   - name: acceptance-tests
     release: cf
-- instances: 1
+- default_networks:
+  - name: cf1
+  instances: 1
   lifecycle: errand
   name: smoke_tests
   networks:
@@ -2584,7 +2630,7 @@ properties:
     admin_users:
     - password: blobstore-password
       username: blobstore-username
-    port: 80
+    port: 8080
     secure_link:
       secret: blobstore-secret
     tls:
@@ -2632,7 +2678,7 @@ properties:
         XL2e5p/TqF9l2rkTcBM8Koi0lz3ZIWpaet6NKvSVQspnLGRIw0I9PvOlKCttNhGT
         cG1R+1W2PzUBtjo477QeJEoYa1k2sQ==
         -----END CERTIFICATE-----
-      port: 443
+      port: 4443
       private_key: |+
         -----BEGIN RSA PRIVATE KEY-----
         MIIEpAIBAAKCAQEAxVKn++XNrpKfna39TdysKZvjX3CdBGGfcR0IJVQQQQGiiiBQ
@@ -2705,7 +2751,7 @@ properties:
           bAzM00WOuWYAt8wwcB2+feZiOUxoMzE13XdDf+XaJwmBmKEKYf56+kJTkQ==
           -----END CERTIFICATE-----
         password: blobstore-password
-        private_endpoint: https://blobstore.service.cf.internal
+        private_endpoint: https://blobstore.service.cf.internal:4443
         public_endpoint: http://blobstore.bosh-lite.com
         username: blobstore-username
     bulk_api_password: bulk-password
@@ -2780,7 +2826,7 @@ properties:
           bAzM00WOuWYAt8wwcB2+feZiOUxoMzE13XdDf+XaJwmBmKEKYf56+kJTkQ==
           -----END CERTIFICATE-----
         password: blobstore-password
-        private_endpoint: https://blobstore.service.cf.internal
+        private_endpoint: https://blobstore.service.cf.internal:4443
         public_endpoint: http://blobstore.bosh-lite.com
         username: blobstore-username
     external_host: api
@@ -2873,7 +2919,7 @@ properties:
           bAzM00WOuWYAt8wwcB2+feZiOUxoMzE13XdDf+XaJwmBmKEKYf56+kJTkQ==
           -----END CERTIFICATE-----
         password: blobstore-password
-        private_endpoint: https://blobstore.service.cf.internal
+        private_endpoint: https://blobstore.service.cf.internal:4443
         public_endpoint: http://blobstore.bosh-lite.com
         username: blobstore-username
     quota_definitions:
@@ -2917,7 +2963,7 @@ properties:
           bAzM00WOuWYAt8wwcB2+feZiOUxoMzE13XdDf+XaJwmBmKEKYf56+kJTkQ==
           -----END CERTIFICATE-----
         password: blobstore-password
-        private_endpoint: https://blobstore.service.cf.internal
+        private_endpoint: https://blobstore.service.cf.internal:4443
         public_endpoint: http://blobstore.bosh-lite.com
         username: blobstore-username
     security_event_logging:
@@ -3019,7 +3065,7 @@ properties:
         bAzM00WOuWYAt8wwcB2+feZiOUxoMzE13XdDf+XaJwmBmKEKYf56+kJTkQ==
         -----END CERTIFICATE-----
       password: blobstore-password
-      private_endpoint: https://blobstore.service.cf.internal
+      private_endpoint: https://blobstore.service.cf.internal:4443
       public_endpoint: http://blobstore.bosh-lite.com
       username: blobstore-username
   ccdb:
@@ -3392,7 +3438,6 @@ properties:
   dropsonde:
     enabled: true
   etcd:
-    advertise_urls_dns_suffix: etcd.service.cf.internal
     machines:
     - 10.244.0.42
     peer_require_ssl: false
@@ -3489,6 +3534,13 @@ properties:
       gK0NXLfzFHgnM84GdtPpqbgkxfPf17cWfXg8e4aoor4sxYVFPitnNVP7/V1uNNZN
       ZYj59Q6AUR9BvPeli7gwedfGWyAl35NGcNq8JG6rL+FWubDWqqc=
       -----END RSA PRIVATE KEY-----
+    etcd:
+      ca_cert: null
+      client_cert: null
+      client_key: null
+      machines:
+      - 10.244.0.42
+      require_ssl: null
     port: 5155
     server_cert: |+
       -----BEGIN CERTIFICATE-----
@@ -3619,7 +3671,7 @@ properties:
   request_timeout_in_seconds: 900
   router:
     cipher_suites: null
-    debug_addr: null
+    debug_address: null
     drain_wait: null
     enable_access_log_streaming: null
     enable_proxy: null
@@ -3691,7 +3743,7 @@ properties:
         authorized-grant-types: password,refresh_token
         override: true
         refresh-token-validity: 2592000
-        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read
+        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,cloud_controller.admin_read_only,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read,routing.router_groups.write
       cloud_controller_username_lookup:
         authorities: scim.userids
         authorized-grant-types: client_credentials
@@ -3769,7 +3821,7 @@ properties:
       groups: null
       userids_enabled: true
       users:
-      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read
+      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write
     spring_profiles: null
     ssl:
       port: 8443

@@ -11,41 +11,14 @@ cd ${repo_base}/cf-release
 
 
 cd ${repo_base}/diego-release
-USE_SQL='mysql' ./scripts/generate-bosh-lite-manifests \
-    -c ${base}/cf.yml \
-    -i ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/iaas-settings.yml \
-    -p ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/property-overrides.yml \
-    -n ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/instance-count-overrides.yml \
-    > ${base}/diego.yml
-
-sql_option="-s manifest-generation/bosh-lite-stubs/experimental/mysql/diego-sql.yml"
-
 ./scripts/generate-deployment-manifest \
         -c ${base}/cf.yml \
         -i ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/iaas-settings.yml \
         -p ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/property-overrides.yml \
         -n ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/instance-count-overrides.yml \
-        ${sql_option} \
-        ${voldriver_option} \
         -v ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/release-versions.yml \
+        -s ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/postgres/diego-sql.yml \
+        -x \
+        -d ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/experimental/voldriver/drivers.yml \
+        -b \
         > ${base}/diego.yml
-
-tmpdir=$(mktemp -d /tmp/diego-manifest.XXXXX)
-
-spiff merge \
-        ${repo_base}/diego-release/manifest-generation/config-from-cf.yml \
-        ${repo_base}/diego-release/manifest-generation/config-from-cf-internal.yml \
-        ${base}/cf.yml \
-        > ${tmpdir}/config-from-cf.yml
-
-./scripts/generate-benchmarks-manifest \
-        ${base}/diego.yml \
-        ${repo_base}/diego-release/manifest-generation/benchmark-errand-stubs/default_bosh_lite_benchmark_properties.yml \
-        ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/iaas-settings.yml \
-        > ${base}/diego-benchmarks.yml
-
-./scripts/generate-vizzini-manifest \
-        -c ${base}/cf.yml \
-        -p ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/vizzini-properties.yml \
-        -i ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/iaas-settings.yml \
-        > ${base}/vizzini.yml
