@@ -115,11 +115,11 @@ jobs:
       - 10.244.0.22
   resource_pool: router_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: haproxy
     release: cf
   - name: metron_agent
-    release: cf
-  - name: consul_agent
     release: cf
   update: {}
 - default_networks:
@@ -135,7 +135,11 @@ jobs:
       zone: z1
   resource_pool: medium_z1
   templates:
-  - name: nats
+  - name: consul_agent
+    release: cf
+  - consumes:
+      nats: nil
+    name: nats
     release: cf
   - name: nats_stream_forwarder
     release: cf
@@ -154,7 +158,11 @@ jobs:
       zone: z2
   resource_pool: medium_z2
   templates:
-  - name: nats
+  - name: consul_agent
+    release: cf
+  - consumes:
+      nats: nil
+    name: nats
     release: cf
   - name: nats_stream_forwarder
     release: cf
@@ -171,10 +179,17 @@ jobs:
     - 10.244.0.42
   persistent_disk: 10024
   properties:
+    consul:
+      agent:
+        services:
+          etcd:
+            name: cf-etcd
     metron_agent:
       zone: z1
-  resource_pool: medium_z1
+  resource_pool: large_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: etcd
     release: cf
   - name: etcd_metrics_server
@@ -193,10 +208,17 @@ jobs:
     static_ips: []
   persistent_disk: 10024
   properties:
+    consul:
+      agent:
+        services:
+          etcd:
+            name: cf-etcd
     metron_agent:
       zone: z2
-  resource_pool: medium_z2
+  resource_pool: large_z2
   templates:
+  - name: consul_agent
+    release: cf
   - name: etcd
     release: cf
   - name: etcd_metrics_server
@@ -217,6 +239,8 @@ jobs:
       zone: z1
   resource_pool: small_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: collector
     release: cf
   - name: metron_agent
@@ -306,6 +330,8 @@ jobs:
       zone: z1
   resource_pool: medium_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: postgres
     release: cf
   - name: metron_agent
@@ -345,11 +371,11 @@ jobs:
         - 10.244.0.22
   resource_pool: medium_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: uaa
     release: cf
   - name: metron_agent
-    release: cf
-  - name: consul_agent
     release: cf
   - name: route_registrar
     release: cf
@@ -390,11 +416,11 @@ jobs:
         - 10.244.0.22
   resource_pool: medium_z2
   templates:
+  - name: consul_agent
+    release: cf
   - name: uaa
     release: cf
   - name: metron_agent
-    release: cf
-  - name: consul_agent
     release: cf
   - name: route_registrar
     release: cf
@@ -537,6 +563,8 @@ jobs:
       zone: z1
   resource_pool: medium_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: cloud_controller_clock
     release: cf
   - name: metron_agent
@@ -737,6 +765,8 @@ jobs:
       zone: z1
   resource_pool: medium_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: doppler
     release: cf
   - name: syslog_drain_binder
@@ -757,6 +787,8 @@ jobs:
       zone: z2
   resource_pool: medium_z2
   templates:
+  - name: consul_agent
+    release: cf
   - name: doppler
     release: cf
   - name: syslog_drain_binder
@@ -777,6 +809,8 @@ jobs:
       zone: z1
   resource_pool: medium_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: doppler
     release: cf
   - name: syslog_drain_binder
@@ -797,6 +831,8 @@ jobs:
       zone: z2
   resource_pool: medium_z2
   templates:
+  - name: consul_agent
+    release: cf
   - name: doppler
     release: cf
   - name: syslog_drain_binder
@@ -811,6 +847,13 @@ jobs:
   networks:
   - name: cf1
   properties:
+    consul:
+      agent:
+        services:
+          loggregator_trafficcontroller: {}
+    loggregator:
+      uaa:
+        client_secret: doppler-secret
     metron_agent:
       zone: z1
     route_registrar:
@@ -820,15 +863,12 @@ jobs:
         registration_interval: 20s
         uris:
         - doppler.bosh-lite.com
-      - name: loggregator
-        port: 8080
-        registration_interval: 20s
-        uris:
-        - loggregator.bosh-lite.com
     traffic_controller:
       zone: z1
   resource_pool: small_z1
   templates:
+  - name: consul_agent
+    release: cf
   - name: loggregator_trafficcontroller
     release: cf
   - name: metron_agent
@@ -843,6 +883,13 @@ jobs:
   networks:
   - name: cf2
   properties:
+    consul:
+      agent:
+        services:
+          loggregator_trafficcontroller: {}
+    loggregator:
+      uaa:
+        client_secret: doppler-secret
     metron_agent:
       zone: z2
     route_registrar:
@@ -852,15 +899,12 @@ jobs:
         registration_interval: 20s
         uris:
         - doppler.bosh-lite.com
-      - name: loggregator
-        port: 8080
-        registration_interval: 20s
-        uris:
-        - loggregator.bosh-lite.com
     traffic_controller:
       zone: z2
   resource_pool: small_z2
   templates:
+  - name: consul_agent
+    release: cf
   - name: loggregator_trafficcontroller
     release: cf
   - name: metron_agent
@@ -3172,6 +3216,7 @@ properties:
       sD0sQMSg/b/b60OtJ/Qm5+u42kDaQi3v9+92S/bs9fTzA25c/mr8KA6dvG4LAsJU
       /QlnEFyH789135x864ym1G2fvaPTqcgIc7jfw3tMTs5TtP/VSTn0
       -----END CERTIFICATE-----
+    dns_config: null
     encrypt_keys:
     - Atzo3VBv+YVDzQAzlQRPRA==
     server_cert: |+
@@ -3423,8 +3468,12 @@ properties:
   doppler:
     blacklisted_syslog_ranges: null
     debug: false
+    etcd:
+      client_cert: ""
+      client_key: ""
     maxRetainedLogMessages: 100
     message_drain_buffer_size: null
+    outgoing_port: 8081
     port: 4443
     tls:
       enable: null
@@ -3438,16 +3487,31 @@ properties:
   dropsonde:
     enabled: true
   etcd:
+    advertise_urls_dns_suffix: cf-etcd.service.cf.internal
+    ca_cert: ""
+    client_cert: ""
+    client_key: ""
+    cluster:
+    - instances: 1
+      name: etcd_z1
+    - instances: 0
+      name: etcd_z2
     machines:
     - 10.244.0.42
+    peer_ca_cert: ""
+    peer_cert: ""
+    peer_key: ""
     peer_require_ssl: false
     require_ssl: false
+    server_cert: ""
+    server_key: ""
   etcd_metrics_server:
-    nats:
-      machines:
-      - 10.244.0.6
-      password: nats
-      username: nats
+    etcd:
+      ca_cert: ""
+      client_cert: ""
+      client_key: ""
+      dns_suffix: cf-etcd.service.cf.internal
+      require_ssl: false
   ha_proxy: null
   hm9000:
     ca_cert: |+
@@ -3535,12 +3599,12 @@ properties:
       ZYj59Q6AUR9BvPeli7gwedfGWyAl35NGcNq8JG6rL+FWubDWqqc=
       -----END RSA PRIVATE KEY-----
     etcd:
-      ca_cert: null
-      client_cert: null
-      client_key: null
+      ca_cert: ""
+      client_cert: ""
+      client_key: ""
       machines:
-      - 10.244.0.42
-      require_ssl: null
+      - cf-etcd.service.cf.internal
+      require_ssl: false
     port: 5155
     server_cert: |+
       -----BEGIN CERTIFICATE-----
@@ -3604,8 +3668,10 @@ properties:
     blacklisted_syslog_ranges: null
     debug: false
     etcd:
+      ca_cert: ""
       machines:
-      - 10.244.0.42
+      - cf-etcd.service.cf.internal
+      require_ssl: false
     maxRetainedLogMessages: 100
     outgoing_dropsonde_port: 8081
     tls:
@@ -3618,9 +3684,9 @@ properties:
       domain: null
     asset_base_url: null
     brand: oss
+    branding: null
     catalina_opts: null
     enabled: true
-    invitations_enabled: null
     links:
       passwd: https://login.bosh-lite.com/forgot_password
       signup: https://login.bosh-lite.com/create_account
@@ -3632,21 +3698,19 @@ properties:
     restricted_ips_regex: null
     saml: null
     self_service_links_enabled: null
-    signups_enabled: null
     smtp:
       host: null
       password: null
       port: null
       user: null
-    spring_profiles: null
-    tiles: null
-    uaa_base: null
     url: null
   metron_agent:
-    buffer_size: null
     deployment: cf-warden
-    enable_buffer: null
+    etcd:
+      client_cert: ""
+      client_key: ""
     preferred_protocol: null
+    protocols: null
     tls:
       client_cert: null
       client_key: null
@@ -3670,6 +3734,7 @@ properties:
     share: null
   request_timeout_in_seconds: 900
   router:
+    balancing_algorithm: null
     cipher_suites: null
     debug_address: null
     drain_wait: null
@@ -3677,6 +3742,10 @@ properties:
     enable_proxy: null
     enable_ssl: null
     extra_headers_to_log: null
+    force_forwarded_proto_https: null
+    healthcheck_user_agent: null
+    load_balancer_healthy_threshold: null
+    logging_level: debug
     logrotate: null
     port: null
     requested_route_registration_interval_in_seconds: null
@@ -3692,6 +3761,9 @@ properties:
       password: router
       port: null
       user: router
+    suspend_pruning_if_nats_unavailable: null
+    tracing:
+      enable_zipkin: null
   routing_api:
     enabled: null
   smoke_tests:
@@ -3707,11 +3779,17 @@ properties:
     skip_cert_verify: true
   support_address: http://support.cloudfoundry.com
   syslog_daemon_config: null
+  syslog_drain_binder:
+    etcd:
+      client_cert: ""
+      client_key: ""
   system_domain: bosh-lite.com
   system_domain_organization: null
   traffic_controller:
     disable_access_control: null
-    outgoing_port: 8080
+    etcd:
+      client_cert: ""
+      client_key: ""
     security_event_logging:
       enabled: false
     zone: null
@@ -3730,7 +3808,7 @@ properties:
     clients:
       cc-service-dashboards:
         authorities: clients.read,clients.write,clients.admin
-        authorized-grant-types: client_credentials
+        authorized-grant-types: authorization_code,client_credentials
         scope: openid,cloud_controller_service_permissions.read
         secret: cc-broker-secret
       cc_routing:
@@ -3767,7 +3845,7 @@ properties:
       notifications:
         authorities: cloud_controller.admin,scim.read
         authorized-grant-types: client_credentials
-        secret: notification-secret
+        secret: notifications-secret
       ssh-proxy:
         authorized-grant-types: authorization_code
         autoapprove: true
@@ -3813,16 +3891,32 @@ properties:
     login: null
     newrelic: null
     no_ssl: null
+    password:
+      policy:
+        minLength: null
+        requireDigit: null
+        requireLowerCaseCharacter: null
+        requireSpecialCharacter: null
+        requireUpperCaseCharacter: null
     port: 8080
     require_https: false
-    restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
     scim:
       external_groups: null
       groups: null
       userids_enabled: true
       users:
-      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write
-    spring_profiles: null
+      - groups:
+        - scim.write
+        - scim.read
+        - openid
+        - cloud_controller.admin
+        - clients.read
+        - clients.write
+        - doppler.firehose
+        - routing.router_groups.read
+        - routing.router_groups.write
+        name: admin
+        password: admin
     ssl:
       port: 8443
     sslCertificate: |+
