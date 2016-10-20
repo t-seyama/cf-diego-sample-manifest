@@ -21,4 +21,5 @@ cd ${repo_base}/diego-release
         -x \
         -d ${repo_base}/diego-release/manifest-generation/bosh-lite-stubs/experimental/voldriver/drivers.yml \
         -b \
+        -g \
         > ${base}/diego.yml

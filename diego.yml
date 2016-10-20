@@ -113,7 +113,7 @@ jobs:
   - name: rep
     release: diego
   - name: garden
-    release: garden-linux
+    release: garden-runc
   - name: cflinuxfs2-rootfs-setup
     release: cflinuxfs2-rootfs
   - name: metron_agent
@@ -229,7 +229,7 @@ jobs:
   - name: rep
     release: diego
   - name: garden
-    release: garden-linux
+    release: garden-runc
   - name: cflinuxfs2-rootfs-setup
     release: cflinuxfs2-rootfs
   - name: metron_agent
@@ -345,7 +345,7 @@ jobs:
   - name: rep
     release: diego
   - name: garden
-    release: garden-linux
+    release: garden-runc
   - name: cflinuxfs2-rootfs-setup
     release: cflinuxfs2-rootfs
   - name: metron_agent
@@ -446,7 +446,7 @@ jobs:
   - name: file_server
     release: diego
   - name: garden
-    release: garden-linux
+    release: garden-runc
   - name: nsync
     release: cf
   - name: cflinuxfs2-rootfs-setup
@@ -493,7 +493,7 @@ jobs:
   - name: file_server
     release: diego
   - name: garden
-    release: garden-linux
+    release: garden-runc
   - name: nsync
     release: cf
   - name: cflinuxfs2-rootfs-setup
@@ -540,7 +540,7 @@ jobs:
   - name: file_server
     release: diego
   - name: garden
-    release: garden-linux
+    release: garden-runc
   - name: nsync
     release: cf
   - name: cflinuxfs2-rootfs-setup
@@ -2681,7 +2681,7 @@ releases:
   version: latest
 - name: local-volume
   version: latest
-- name: garden-linux
+- name: garden-runc
   version: latest
 - name: cf
   version: latest
