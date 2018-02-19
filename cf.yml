@@ -240,7 +240,9 @@ jobs:
     release: cf
   - name: metron_agent
     release: cf
-  - name: blobstore
+  - consumes:
+      directories_to_backup: nil
+    name: blobstore
     release: cf
   - consumes:
       nats: nil
@@ -280,7 +282,9 @@ jobs:
     release: cf
   - name: metron_agent
     release: cf
-  - name: blobstore
+  - consumes:
+      directories_to_backup: nil
+    name: blobstore
     release: cf
   - consumes:
       nats: nil
@@ -2920,13 +2924,13 @@ properties:
         url: null
       insecure_docker_registry_list: null
       pid_limit: null
-      temporary_cc_uploader_mtls: false
-      temporary_droplet_download_mtls: false
-      temporary_local_apps: false
-      temporary_local_staging: false
-      temporary_local_sync: false
-      temporary_local_tasks: false
-      temporary_local_tps: false
+      temporary_cc_uploader_mtls: null
+      temporary_droplet_download_mtls: null
+      temporary_local_apps: null
+      temporary_local_staging: null
+      temporary_local_sync: null
+      temporary_local_tasks: null
+      temporary_local_tps: null
       use_privileged_containers_for_running: null
       use_privileged_containers_for_staging: null
     directories: null
@@ -3157,6 +3161,7 @@ properties:
         total_service_keys: 1000
         total_services: 100
     rate_limiter: null
+    release_level_backup: false
     reserved_private_domains: null
     resource_pool:
       blobstore_type: webdav
